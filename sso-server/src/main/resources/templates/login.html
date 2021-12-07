@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+<form action="http://www.sso.com:5000/sso/login" method="post">
+    <h1>统一认证登录中心</h1>
+    <!--获取后台跳转带入值：key-->
+    <!--/*@thymesVar id="key" type=""*/-->
+    <span th:text="${redirectUrl}"></span>
+    <!--  隐藏域,携带跳转来的地址  -->
+    <input type="hidden" name="redirectUrl" th:value="${redirectUrl}">
+    <input type="text" placeholder="用户名" name="userName">
+    <input type="password" placeholder="密码" name="password">
+    <button type="submit">登录</button>
+</form>
+</body>
+</html>

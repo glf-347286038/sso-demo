@@ -1,0 +1,13 @@
+server:
+  port: 5004
+spring:
+  application:
+    name: beta-service
+    # 设置实时刷新
+    cache: false
+    # 模板引擎访问前缀
+    prefix: classpath:/templates/
+# 要跳转的服务中心地址
+sso-server-url-prefix: http://www.sso.com:5000/sso
+# 当前应用的地址
+client-host-url: http://www.beta.com:5004

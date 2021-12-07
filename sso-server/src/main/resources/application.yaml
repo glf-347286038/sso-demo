@@ -1,0 +1,13 @@
+server:
+  port: 5000
+spring:
+  application:
+    name: sso-service
+  thymeleaf:
+    # 设置实时刷新
+    cache: true
+    # 默认静态资源路径
+    prefix: classpath:/templates/
+
+
+

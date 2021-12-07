@@ -1,0 +1,4 @@
+# Project exclude paths
+/beta/target/
+/delta/target/
+/sso-server/target/
