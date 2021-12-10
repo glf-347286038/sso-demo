@@ -8,6 +8,6 @@ spring:
     # 模板引擎访问前缀
     prefix: classpath:/templates/
 # 要跳转的服务中心地址
-sso-server-url-prefix: http://www.sso.com:5000/sso
+sso-server-url-prefix: http://192.168.0.106:5000/sso
 # 当前应用的地址
-client-host-url: http://www.beta.com:5004
+client-host-url: http://127.0.0.1:5004
