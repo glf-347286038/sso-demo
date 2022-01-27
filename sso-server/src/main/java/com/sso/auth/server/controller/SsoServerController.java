@@ -1,13 +1,11 @@
 package com.sso.auth.server.controller;
 
-import com.sso.auth.server.pojo.ClientInfoVo;
 import com.sso.auth.server.service.SsoServerService;
 import com.sso.user.pojo.User;
 import com.sso.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -93,23 +89,8 @@ public class SsoServerController {
 
     @PostMapping("/verify")
     @ResponseBody
-    public User verifyToken(String ssoToken, String clientUrl, String sessionId) {
-        // 通过token查找用户信息
-        User user = userService.getUserInfoByToken(ssoToken);
-        if (user != null) {
-            log.info("认证中心校验通过,已存在当前会话");
-            // 保存用户的登录地址信息
-            List<ClientInfoVo> clientInfoVoList = ssoServerService.getClient(ssoToken);
-            if (CollectionUtils.isEmpty(clientInfoVoList)) {
-                clientInfoVoList = new ArrayList<>();
-            }
-            ClientInfoVo clientInfoVo = new ClientInfoVo();
-            clientInfoVo.setClientUrl(clientUrl);
-            clientInfoVo.setSessionId(sessionId);
-            clientInfoVoList.add(clientInfoVo);
-            ssoServerService.addClient(ssoToken, clientInfoVoList);
-        }
-        return user;
+    public Boolean verifyToken(String token, String clientLogOutUrl, String sessionId) {
+        return ssoServerService.verifyToken(token, clientLogOutUrl, sessionId);
     }
 
     @GetMapping("logout")
