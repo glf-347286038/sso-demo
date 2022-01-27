@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
 </head>
 <body>
 <p>欢迎登录beta</p>
-<form action="localhost:5000/sso/login">
-    <form action="">
-
-    </form>
-</form>
+<span th:text="${logoutUrl}"></span>
+<a th:href="${logoutUrl}">退出</a>
 </body>
 </html>

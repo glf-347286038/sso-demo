@@ -1,10 +1,11 @@
 package com.beta.controller;
 
+import com.beta.util.SsoClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @Author: gaolingfeng
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @GetMapping("/index")
-    public String index(String ssoToken) {
+    public String index(Model model) {
+        model.addAttribute("logoutUrl", SsoClientUtil.SSO_SERVER_LOGOUT_URL);
         return "/index";
     }
 }

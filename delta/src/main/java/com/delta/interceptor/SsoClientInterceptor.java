@@ -50,6 +50,8 @@ public class SsoClientInterceptor implements HandlerInterceptor {
             // 去sso服务器验证token,当前系统是A,若A未登录,B已登录,ssoToken也是有值的,所以A要去sso验证
             JSONObject requestParam = new JSONObject();
             requestParam.put("ssoToken", ssoToken);
+            requestParam.put("clientUrl", SsoClientUtil.CLIENT_LOGOUT_URL);
+            requestParam.put("sessionId", httpSession.getId());
             String result = HttpUtil.sendPostRequest(SsoClientUtil.SSO_SERVER_URL_PREFIX + "/verify", requestParam);
             if (!StringUtils.isEmpty(result)) {
                 log.info("校验通过");

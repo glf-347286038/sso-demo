@@ -22,9 +22,17 @@ public class SsoClientUtil {
      */
     public static final String SSO_SERVER_URL_PREFIX;
     /**
+     * 统一认证中心退出地址
+     */
+    public static final String SSO_SERVER_LOGOUT_URL;
+    /**
      * 当前客户端地址
      */
     public static final String CLIENT_HOST_URL;
+    /**
+     * 认证中心登出地址
+     */
+    public static final String CLIENT_LOGOUT_URL;
 
     static {
         try {
@@ -34,6 +42,8 @@ public class SsoClientUtil {
         }
         SSO_SERVER_URL_PREFIX = SSO_PROPERTIES.getProperty("sso-server-url-prefix");
         CLIENT_HOST_URL = SSO_PROPERTIES.getProperty("client-host-url");
+        CLIENT_LOGOUT_URL = CLIENT_HOST_URL + SSO_PROPERTIES.getProperty("client-logout-url");
+        SSO_SERVER_LOGOUT_URL = SSO_SERVER_URL_PREFIX + SSO_PROPERTIES.getProperty("client-logout-url");
     }
 
     /**
