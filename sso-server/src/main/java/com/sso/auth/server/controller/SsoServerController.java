@@ -1,13 +1,11 @@
-package com.sso.system.controller;
+package com.sso.auth.server.controller;
 
-import com.sso.system.constant.SsoConstant;
-import com.sso.user.pojo.ClientInfoVo;
+import com.sso.auth.server.service.SsoServerService;
 import com.sso.user.pojo.User;
 import com.sso.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
- * @Author: gaolingfeng
+ * @Author: golf
  * @Date: 2021/11/28 20:32
  */
 @Slf4j
@@ -30,9 +26,15 @@ import java.util.UUID;
 public class SsoServerController {
 
     private final UserService userService;
+    private static final String SSO_TOKEN = "ssoToken";
+    private static final String REDIRECT = "redirect:";
+    private static final String REDIRECT_URL = "redirectUrl";
+    private static final String LOGIN = "login";
+    private final SsoServerService ssoServerService;
 
-    public SsoServerController(UserService userService) {
+    public SsoServerController(UserService userService, SsoServerService ssoServerService) {
         this.userService = userService;
+        this.ssoServerService = ssoServerService;
     }
 
     @PostMapping("login")
@@ -48,16 +50,16 @@ public class SsoServerController {
             userService.add(token, user);
             log.error("登录请求的session" + httpSession.getId());
             // 在服务器中存储全局会话信息
-            httpSession.setAttribute(SsoConstant.SSO_TOKEN, token);
+            httpSession.setAttribute(SSO_TOKEN, token);
             // 将token返回给客户端
-            redirectAttributes.addAttribute(SsoConstant.SSO_TOKEN, token);
+            redirectAttributes.addAttribute(SSO_TOKEN, token);
             // 跳转到来的地方
-            return SsoConstant.REDIRECT + redirectUrl;
+            return REDIRECT + redirectUrl;
         }
         // 登录不成功
         log.info("用户名:{},密码不正确", userName);
-        model.addAttribute(SsoConstant.REDIRECT_URL, redirectUrl);
-        return SsoConstant.LOGIN;
+        model.addAttribute(REDIRECT_URL, redirectUrl);
+        return LOGIN;
     }
 
     /**
@@ -71,45 +73,30 @@ public class SsoServerController {
     @GetMapping("/checkLogin")
     public String checkLogin(String redirectUrl, HttpSession httpSession, RedirectAttributes redirectAttributes, Model model) {
         // 判断用户是否登录了,是否拥有全局的会话,即token
-        String token = (String) httpSession.getAttribute(SsoConstant.SSO_TOKEN);
+        String token = (String) httpSession.getAttribute(SSO_TOKEN);
         log.error("checkLogin的session" + httpSession.getId());
         if (StringUtils.isEmpty(token)) {
             // 没有全局会话,去登录页面,从哪里来不能丢
-            model.addAttribute(SsoConstant.REDIRECT_URL, redirectUrl);
+            model.addAttribute(REDIRECT_URL, redirectUrl);
             // 跳转到登录页面
-            return SsoConstant.LOGIN;
+            return LOGIN;
         } else {
             // 存在全局会话,返回到原来的地方
-            redirectAttributes.addAttribute(SsoConstant.SSO_TOKEN, token);
-            return SsoConstant.REDIRECT + redirectUrl;
+            redirectAttributes.addAttribute(SSO_TOKEN, token);
+            return REDIRECT + redirectUrl;
         }
     }
 
     @PostMapping("/verify")
     @ResponseBody
-    public User verifyToken(String ssoToken, String clientUrl, String sessionId) {
-        // 通过token查找用户信息
-        User user = userService.getUserInfoByToken(ssoToken);
-        if (user != null) {
-            log.info("认证中心校验通过,已存在当前会话");
-            // 保存用户的登录地址信息
-            List<ClientInfoVo> clientInfoVoList = userService.getClient(ssoToken);
-            if (CollectionUtils.isEmpty(clientInfoVoList)) {
-                clientInfoVoList = new ArrayList<>();
-            }
-            ClientInfoVo clientInfoVo = new ClientInfoVo();
-            clientInfoVo.setClientUrl(clientUrl);
-            clientInfoVo.setSessionId(sessionId);
-            clientInfoVoList.add(clientInfoVo);
-            userService.addClient(ssoToken, clientInfoVoList);
-        }
-        return user;
+    public Boolean verifyToken(String token, String clientLogOutUrl, String sessionId) {
+        return ssoServerService.verifyToken(token, clientLogOutUrl, sessionId);
     }
 
     @GetMapping("logout")
     public String logout(HttpSession httpSession) {
         httpSession.invalidate();
         // 通知用户登录过的系统全部下线,使用监听器实现,因为session会存在自动过期的问题
-        return "login";
+        return LOGIN;
     }
 }

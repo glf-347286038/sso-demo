@@ -1,14 +1,16 @@
 package com.sso.user.service.impl;
 
-import com.sso.user.pojo.ClientInfoVo;
 import com.sso.user.pojo.User;
 import com.sso.user.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * @Author: gaolingfeng
+ * @Author: golf
  * @Date: 2021/12/1 0:21
  */
 @Service
@@ -18,10 +20,6 @@ public class UserServiceImpl implements UserService {
      * 用户和token信息 key为token,value为用户信息
      */
     private static final Map<String, User> USER_TOKEN_INFO = new HashMap<>();
-    /**
-     * 客户登录地址
-     */
-    private static final Map<String, List<ClientInfoVo>> CLIENT_INFO = new HashMap<>();
 
     /**
      * 用户信息
@@ -64,13 +62,4 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    @Override
-    public void addClient(String ssoToken, List<ClientInfoVo> clientInfoVoList) {
-        CLIENT_INFO.put(ssoToken, clientInfoVoList);
-    }
-
-    @Override
-    public List<ClientInfoVo> getClient(String ssoToken) {
-        return CLIENT_INFO.get(ssoToken);
-    }
 }
