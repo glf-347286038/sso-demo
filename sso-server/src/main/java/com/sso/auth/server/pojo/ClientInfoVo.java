@@ -1,4 +1,4 @@
-package com.sso.user.pojo;
+package com.sso.auth.server.pojo;
 
 import lombok.Data;
 

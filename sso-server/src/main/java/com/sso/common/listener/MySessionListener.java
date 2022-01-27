@@ -1,8 +1,9 @@
-package com.sso.system.listener;
+package com.sso.common.listener;
 
-import com.sso.user.pojo.ClientInfoVo;
+import com.sso.auth.server.pojo.ClientInfoVo;
+import com.sso.auth.server.service.SsoServerService;
 import com.sso.user.service.UserService;
-import com.sso.util.HttpUtil;
+import com.sso.utils.HttpUtil;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -16,14 +17,11 @@ import java.util.List;
 @Component
 public class MySessionListener implements HttpSessionListener {
     private final UserService userService;
+    private final SsoServerService ssoServerService;
 
-    public MySessionListener(UserService userService) {
+    public MySessionListener(UserService userService, SsoServerService ssoServerService) {
         this.userService = userService;
-    }
-
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-
+        this.ssoServerService = ssoServerService;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class MySessionListener implements HttpSessionListener {
         String token = String.valueOf(httpSession.getAttribute("ssoToken"));
         // 销毁用户全局会话的登录信息
         userService.remove(token);
-        List<ClientInfoVo> clientInfoVoList = userService.getClient(token);
+        List<ClientInfoVo> clientInfoVoList = ssoServerService.getClient(token);
         // 遍历通知所有客户端销毁信息
         for (ClientInfoVo clientInfoVo : clientInfoVoList) {
             HttpUtil.sendHttpRequest(clientInfoVo.getClientUrl(), clientInfoVo.getSessionId());
