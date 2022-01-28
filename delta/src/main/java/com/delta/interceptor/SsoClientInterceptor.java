@@ -41,10 +41,10 @@ public class SsoClientInterceptor implements HandlerInterceptor {
             return true;
         }
         // 判断token
-        String token = request.getParameter("ssoToken");
+        String token = request.getParameter("token");
         if (!StringUtils.isEmpty(token)) {
             log.info("获取到服务器的token:{}", token);
-            // 去sso服务器验证token,当前系统是A,若A未登录,B已登录,ssoToken也是有值的,所以A要去sso验证
+            // 去sso服务器验证token,当前系统是A,若A未登录,B已登录,token也是有值的,所以A要去sso验证
             JSONObject requestParam = new JSONObject();
             requestParam.put("token", token);
             requestParam.put("clientLogOutUrl", SsoClientUtil.CLIENT_LOGOUT_URL);

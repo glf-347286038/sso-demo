@@ -10,8 +10,12 @@
         <module name="sso-server" />
         <module name="beta" />
         <module name="delta" />
+        <module name="sso" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="sso" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
