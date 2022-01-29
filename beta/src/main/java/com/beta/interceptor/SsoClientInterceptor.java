@@ -1,9 +1,11 @@
 package com.beta.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.beta.config.SsoConfig;
 import com.beta.util.HttpUtil;
-import com.beta.util.SsoClientUtil;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -17,6 +19,9 @@ import javax.servlet.http.HttpSession;
  */
 @Slf4j
 public class SsoClientInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private SsoConfig ssoConfig;
 
     /**
      * 登录标识
@@ -49,9 +54,9 @@ public class SsoClientInterceptor implements HandlerInterceptor {
             // 去sso服务器验证token,当前系统是A,若A未登录,是B已登录,token也是有值的,所以A要去sso验证
             JSONObject requestParam = new JSONObject();
             requestParam.put("token", token);
-            requestParam.put("clientLogOutUrl", SsoClientUtil.CLIENT_LOGOUT_URL);
+            requestParam.put("clientLogOutUrl", ssoConfig.getClientLogoutUrl());
             requestParam.put("sessionId", httpSession.getId());
-            boolean result = Boolean.parseBoolean(HttpUtil.sendPostRequest(SsoClientUtil.SSO_SERVER_URL_PREFIX + "/verify", requestParam));
+            boolean result = Boolean.parseBoolean(HttpUtil.sendPostRequest(ssoConfig.getServerVerifyUrl(), requestParam));
             if (result) {
                 httpSession.setAttribute(LOGIN_FLAG, true);
             }
@@ -60,7 +65,22 @@ public class SsoClientInterceptor implements HandlerInterceptor {
 
         // 不存在会话,跳转到统一认证中心,检测系统是否登录,参数要带上当前的地址,为了之后可以跳转回来
         // http:localhost:5000/sso/checkLogin?redirectUrl=http://localhost:5004
-        SsoClientUtil.redirectToSsoUrl(request, response);
+        redirectToSsoUrl(request, response);
         return false;
+    }
+
+    /**
+     * 根据httpServletRequest获取跳转到统一认证中心的地址,通过httpServletResponse跳转到指定的地址
+     *
+     * @param httpServletRequest  请求
+     * @param httpServletResponse 响应
+     */
+    @SneakyThrows
+    public void redirectToSsoUrl(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        // 重定向地址
+        String redirectUrl = ssoConfig.getClientUrl() + httpServletRequest.getServletPath();
+        String url = ssoConfig.getServerCheckLoginUrl() + "?redirectUrl=" +
+                redirectUrl;
+        httpServletResponse.sendRedirect(url);
     }
 }

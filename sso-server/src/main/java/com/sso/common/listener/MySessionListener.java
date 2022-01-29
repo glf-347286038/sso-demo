@@ -27,7 +27,7 @@ public class MySessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         HttpSession httpSession = se.getSession();
-        String token = String.valueOf(httpSession.getAttribute("ssoToken"));
+        String token = String.valueOf(httpSession.getAttribute("token"));
         // 销毁用户全局会话的登录信息
         userService.remove(token);
         List<ClientInfoVo> clientInfoVoList = ssoServerService.getClient(token);
