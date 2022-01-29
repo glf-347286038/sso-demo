@@ -7,9 +7,16 @@ spring:
     cache: false
     # 模板引擎访问前缀
     prefix: classpath:/templates/
-# 要跳转的服务中心地址
-sso-server-url-prefix: http://192.168.1.9:5000/sso
-# 当前应用的地址
-client-host-url: http://127.0.0.1:5002
-# 客户端退出接口
-client-logout-url: /logout
+sso:
+  # 统一认证中心地址
+  server-url: http://192.168.1.9:5000
+  # 统一认证中心检查登录接口
+  server-check-login: /sso/checkLogin
+  # 统一认证校验token接口
+  server-verify: /sso/verify
+  # 统一认证中心退出接口
+  server-logout: /sso/logout
+  # 当前客户端ip
+  client-url:  http://127.0.0.1:5002
+  # 客户端退出接口
+  client-logout-url: /logout
