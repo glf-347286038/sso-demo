@@ -45,7 +45,6 @@ public class HttpUtil {
         // 7.发起请求
         urlConnection.connect();
         // 8.将响应流转为String
-        String response = StreamUtils.copyToString(urlConnection.getInputStream(), StandardCharsets.UTF_8);
-        return response;
+        return StreamUtils.copyToString(urlConnection.getInputStream(), StandardCharsets.UTF_8);
     }
 }
