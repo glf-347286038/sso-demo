@@ -2,6 +2,7 @@ package com.sso.common.listener;
 
 import com.sso.auth.server.pojo.ClientInfoVo;
 import com.sso.auth.server.service.SsoServerService;
+import com.sso.enums.SsoEnum;
 import com.sso.user.service.UserService;
 import com.sso.utils.HttpUtil;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class MySessionListener implements HttpSessionListener {
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         HttpSession httpSession = se.getSession();
-        String token = String.valueOf(httpSession.getAttribute("token"));
+        String token = String.valueOf(httpSession.getAttribute(SsoEnum.TOKEN.getValue()));
         // 销毁用户全局会话的登录信息
         userService.remove(token);
         List<ClientInfoVo> clientInfoVoList = ssoServerService.getClient(token);
