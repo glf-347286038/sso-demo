@@ -1,6 +1,5 @@
 package com.sso.user.pojo;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**

@@ -2,6 +2,7 @@ package com.sso.auth.server.service.impl;
 
 import com.sso.auth.server.pojo.ClientInfoVo;
 import com.sso.auth.server.service.SsoServerService;
+import com.sso.enums.SsoEnum;
 import com.sso.user.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,15 @@ public class SsoServerServiceImpl implements SsoServerService {
 
     public SsoServerServiceImpl(UserService userService) {
         this.userService = userService;
+    }
+
+    @Override
+    public String getCallBackUrl(String redirectUrl, String token) {
+        // 回调地址示例
+        // http://127.0.0.1:5004/login/index?token=f8556f6a-434e-4216-bcc1-08a4c6209f27
+        String callBackUrl = SsoEnum.REDIRECT.getValue() + redirectUrl + "?token=" + token;
+        log.info("回调地址:{}", callBackUrl);
+        return callBackUrl;
     }
 
     @Override

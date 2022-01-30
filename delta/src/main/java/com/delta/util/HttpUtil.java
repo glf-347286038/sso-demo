@@ -1,7 +1,6 @@
 package com.delta.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.delta.constant.RequestConstant;
 import lombok.SneakyThrows;
 import org.springframework.util.StreamUtils;
 
@@ -29,7 +28,7 @@ public class HttpUtil {
         // 2.开启连接
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         // 3.设置请求方式
-        urlConnection.setRequestMethod(RequestConstant.Method.POST);
+        urlConnection.setRequestMethod("POST");
         // 4.输出参数
         urlConnection.setDoOutput(true);
         urlConnection.setDoInput(true);

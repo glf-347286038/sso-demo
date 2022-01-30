@@ -9,6 +9,15 @@ import java.util.List;
  */
 public interface SsoServerService {
     /**
+     * 获得回调地址
+     *
+     * @param redirectUrl 重定向地址
+     * @param token       令牌
+     * @return 回调地址
+     */
+    String getCallBackUrl(String redirectUrl, String token);
+
+    /**
      * 校验token是否存在,存在则说明存在全局会话,已经是登录状态
      *
      * @param token     令牌/票据/全局会话

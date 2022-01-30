@@ -12,6 +12,7 @@
         <module>delta</module>
         <module>sso-server</module>
         <module>beta</module>
+        <module>sso</module>
     </modules>
 
 <!--    <parent>-->
